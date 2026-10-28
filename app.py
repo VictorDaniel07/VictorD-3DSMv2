@@ -1,19 +1,16 @@
-from flask import Flask
-from controllers.venda_controller import formulario
-from controllers.venda_controller import cadastrar
-from database import criar_tabela
+from flask import Flask, render_template
+from controllers.auth_controller import auth 
+from controllers.sistema_controller import sistema
 
 app = Flask(__name__)
 
-criar_tabela()
+app.secret_key = "chave-secreta"
 
-@app.route("/")
-def inicio():
-    return formulario()
 
-@app.route("/venda", methods=["POST"])
-def registrar_venda():
-    return cadastrar()
+app.register_blueprint(auth)
+app.register_blueprint(sistema)
+@app.errorhandler
+def error_403(error):
+    return render_template("erro403.html")
 
 app.run(debug=True)
-
